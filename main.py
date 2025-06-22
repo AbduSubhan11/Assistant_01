@@ -1,27 +1,20 @@
 import os
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool
 from agents.run import RunConfig
 from fastapi.responses import JSONResponse
 
-# Load environment variables
-load_dotenv()
 
-# Initialize FastAPI
 app = FastAPI()
 
-# Environment setup
 gemini_api_key = os.getenv("GEMINI_API_KEY")
 if not gemini_api_key:
     raise ValueError("GEMINI_API_KEY is not set. Please ensure it is defined in your .env file.")
 
-# Pydantic model
 class PromptInput(BaseModel):
     prompt: str
 
-# Define function tools
 @function_tool
 def get_contact_info():
     return (
@@ -91,7 +84,6 @@ def get_projects():
         "- 🔗 View all: https://the-subhan-portfolio.netlify.app/ and GitHub: https://github.com/abduSubhan11/"
     )
 
-# AI Setup
 external_client = AsyncOpenAI(
     api_key=gemini_api_key,
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
